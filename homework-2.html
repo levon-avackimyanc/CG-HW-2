@@ -1,0 +1,97 @@
+<HTML>
+    <BODY>
+    
+    <canvas id='homework-2' width='500px' height='500px' style='border:5px solid #000000'>
+    </canvas>
+
+    <script>
+        function draw_circle_bresenham(x, y, radius) {
+            let x0 = 0;
+            let y0 = radius;
+            let error = 0;
+            let delta = (2 - 2 * radius);
+
+            while (y0 >= 0) {
+                error = 2 * (delta + y0) - 1;
+                ctx.fillRect(x + x0, y - y0, 1, 1);
+                ctx.fillRect(x - x0, y - y0, 1, 1);
+                ctx.fillRect(x - x0, y + y0, 1, 1);
+                ctx.fillRect(x + x0, y + y0, 1, 1);
+                if (delta < 0 && error <= 0) {
+                    x0++;
+                    delta += 2 * x0 + 1;
+                    continue;
+                }
+                if (delta > 0 && error > 0) {
+                    y0--;
+                    delta -= 2 * y0 + 1;
+                    continue;
+                }
+                x0++;
+                delta += 2 * (x0 - y0);
+                y0--;
+            }
+        }
+    </script>
+    <script>
+        function bresenhem_alg(x_0, y_0, x_1, y_1, colour) {
+            console.log(x_1, y_1);
+            ctx.fillStyle = colour;
+            var epsilon = 0;
+            var x = x_0;
+            var y = y_0;
+            let dx = x_1 - x_0;
+            let dy = y_1 - y_0;
+            if (Math.abs(dx) < Math.abs(dy)) {
+                while (y !== y_1) {
+                    epsilon += 2 * dx;
+                    if (Math.abs(epsilon) < Math.abs(dy)) {
+                        ctx.fillRect(x, y, 1, 1);
+                    } else {
+                        x += (dx/Math.abs(dx));
+                        epsilon -= 2 * dy * ((x_1-x_0)/Math.abs(x_1-x_0)) * (dy/Math.abs(dy));
+                        ctx.fillRect(x, y, 1, 1);
+                    }
+                    y += (dy/Math.abs(dy));
+                }
+                return;
+            }else{
+            while (x !== x_1) {
+                epsilon += 2 * (dy);
+                if (Math.abs(epsilon) < Math.abs(dx)) {
+                    ctx.fillRect(x, y, 1, 1);
+                } else {
+                    y += (dy/Math.abs(dy));
+                    epsilon -= 2 * dx * (dy/Math.abs(dy)) * (dx/Math.abs(dx));
+                    ctx.fillRect(x, y, 1, 1);
+                }
+                x += (dx/Math.abs(dx));
+            }
+        }
+    }
+    
+    
+        function rotate(x_0, y_0, radius) {
+            var angle = Math.floor(Date.now() % 60000 / 1000) * 6 + 90;
+            var y_1 = Math.floor(Math.abs(radius * Math.sin(angle * Math.PI / 180) - y_0));
+            var x_1 = Math.floor(Math.abs(radius * Math.cos(angle * Math.PI / 180) - x_0));
+            bresenhem_alg(x_0, y_0, x_1, y_1, '#000000');
+            setTimeout(function () {
+                bresenhem_alg(x_0, y_0, x_1, y_1, '#ffffff')
+            }, 1000)
+        }
+    
+    </script>
+    
+    <script>
+        var canvas = document.getElementById('homework-2');
+        var ctx = canvas.getContext('2d');
+        var radius = 250, x_0 = 250, y_0 = 250;
+        ctx.arc(x_0, y_0, radius, 0, 2 * Math.PI, false);
+        draw_circle_bresenham(x_0, y_0, radius);
+        setInterval(function () { rotate(x_0, y_0, radius) }, 1000);
+    </script>
+    </BODY>
+    </HTML>
+
+    
